@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ILlogo} from '../../assets';
+import {fonts} from '../../utils';
 
 const Splash = ({navigation}) => {
   useEffect(() => {
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
+    fontFamily: fonts.primary[700],
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
