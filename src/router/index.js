@@ -9,6 +9,7 @@ import {
   Doctor,
   Messages,
   Hospitals,
+  ChooseDoctor,
 } from '../pages';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomNavigator} from '../components';
@@ -29,7 +30,7 @@ const MainApp = () => {
 const Router = () => {
   return (
     <Stack.Navigator
-      initialRouteName="MainApp"
+      initialRouteName="Splash"
       screenOptions={{
         headerShown: false,
         ...TransitionPresets.SlideFromRightIOS,
@@ -40,6 +41,7 @@ const Router = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="UploadPhoto" component={UploadPhoto} />
       <Stack.Screen name="MainApp" component={MainApp} />
+      <Stack.Screen name="ChooseDoctor" component={ChooseDoctor} />
     </Stack.Navigator>
   );
 };

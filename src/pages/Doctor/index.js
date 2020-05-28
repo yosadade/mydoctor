@@ -8,8 +8,9 @@ import {
   Gap,
 } from '../../components';
 import {fonts, colors} from '../../utils';
+import {JSONDoctorCategory} from '../../assets';
 
-const Doctor = () => {
+const Doctor = ({navigation}) => {
   return (
     <View style={styles.page}>
       <View style={styles.content}>
@@ -25,10 +26,15 @@ const Doctor = () => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.category}>
                 <Gap width={32} />
-                <DocterCategory />
-                <DocterCategory />
-                <DocterCategory />
-                <DocterCategory />
+                {JSONDoctorCategory.data.map((item, index) => {
+                  return (
+                    <DocterCategory
+                      key={index}
+                      category={item.category}
+                      onPress={() => navigation.navigate('ChooseDoctor')}
+                    />
+                  );
+                })}
                 <Gap width={22} />
               </View>
             </ScrollView>
