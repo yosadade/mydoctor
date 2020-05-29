@@ -1,22 +1,43 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {colors, fonts} from '../../../utils';
-import {IconNext} from '../../../assets';
+import {
+  IconNext,
+  IconEditProfille,
+  IconLanguage,
+  IconRate,
+  IconHelp,
+} from '../../../assets';
 
-const ListDoctor = ({avatar, name, desc, type}) => {
+const List = ({avatar, name, desc, type, onPress, icon}) => {
+  const Icon = () => {
+    if (icon === 'edit-profile') {
+      return <IconEditProfille />;
+    }
+    if (icon === 'language') {
+      return <IconLanguage />;
+    }
+    if (icon === 'rate') {
+      return <IconRate />;
+    }
+    if (icon === 'help') {
+      return <IconHelp />;
+    }
+    return <IconEditProfille />;
+  };
   return (
-    <View style={styles.container}>
-      <Image source={avatar} style={styles.avatar} />
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      {icon ? <Icon /> : <Image source={avatar} style={styles.avatar} />}
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.desc}>{desc}</Text>
       </View>
       {type === 'next' ? <IconNext /> : null}
-    </View>
+    </TouchableOpacity>
   );
 };
 
-export default ListDoctor;
+export default List;
 
 const styles = StyleSheet.create({
   container: {
@@ -31,10 +52,10 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 46 / 2,
-    marginRight: 12,
   },
   content: {
     flex: 1,
+    marginLeft: 16,
   },
   name: {
     fontSize: 16,
