@@ -1,21 +1,32 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Header, Profile, List, Gap} from '../../components';
-import {IconEditProfille, IconLanguage, IconRate, IconHelp} from '../../assets';
+import {
+  IconEditProfille,
+  IconLanguage,
+  IconRate,
+  IconHelp,
+  DummyUser,
+} from '../../assets';
 import {colors} from '../../utils';
 
-const UserProfile = () => {
+const UserProfile = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Header title="Profile" />
+      <Header title="Profile" onPress={() => navigation.goBack()} />
       <Gap height={10} />
-      <Profile />
+      <Profile
+        avatar={DummyUser}
+        name="Shayna Melinda"
+        desc="Product Designer"
+      />
       <Gap height={14} />
       <List
         icon={IconEditProfille}
         name="Edit Profile"
         desc="Last Update Yesterday"
         type="next"
+        onPress={() => navigation.navigate('UpdateProfile')}
       />
       <List
         icon={IconLanguage}

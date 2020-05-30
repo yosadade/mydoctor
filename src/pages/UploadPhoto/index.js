@@ -24,7 +24,12 @@ const UploadPhoto = ({navigation}) => {
         <View>
           <Button title="Upload and Continue" />
           <Gap height={30} />
-          <Link title="Skip for this" align="center" size={16} />
+          <Link
+            title="Skip for this"
+            align="center"
+            size={16}
+            onPress={() => navigation.replace('MainApp')}
+          />
         </View>
       </View>
     </View>
