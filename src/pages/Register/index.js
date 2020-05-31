@@ -1,9 +1,24 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {Header, Input, Button, Gap} from '../../components';
-import {colors} from '../../utils';
+import {colors, useForm} from '../../utils';
 
 const Register = ({navigation}) => {
+  // const [fullName, setFullName] = useState('');
+  // const [profession, setProfession] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+
+  const [form, setForm] = useForm({
+    fullName: '',
+    profession: '',
+    email: '',
+    password: '',
+  });
+
+  const onContinue = () => {
+    console.log(form);
+  };
   return (
     <View style={styles.page}>
       <Header
@@ -11,22 +26,36 @@ const Register = ({navigation}) => {
         title="Daftar Akun"
         icon="back-dark"
       />
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Input label="Full Name" />
-          <Gap height={24} />
-          <Input label="Pekerjaan" />
-          <Gap height={24} />
-          <Input label="Email" />
-          <Gap height={24} />
-          <Input label="Password" />
-          <Gap height={40} />
-          <Button
-            title="Continue"
-            onPress={() => navigation.navigate('UploadPhoto')}
+          <Input
+            label="Full Name"
+            value={form.fullName}
+            onChangeText={value => setForm('fullName', value)}
           />
+          <Gap height={24} />
+          <Input
+            label="Pekerjaan"
+            value={form.profession}
+            onChangeText={value => setForm('profession', value)}
+          />
+          <Gap height={24} />
+          <Input
+            label="Email"
+            value={form.email}
+            onChangeText={value => setForm('email', value)}
+          />
+          <Gap height={24} />
+          <Input
+            label="Password"
+            value={form.password}
+            onChangeText={value => setForm('password', value)}
+            secureTextEntry
+          />
+          <Gap height={40} />
+          <Button title="Continue" onPress={onContinue} />
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
