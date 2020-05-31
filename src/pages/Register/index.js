@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import {Header, Input, Button, Gap, Loading} from '../../components';
 import {colors, useForm} from '../../utils';
 import {Fire} from '../../config';
@@ -22,16 +23,31 @@ const Register = ({navigation}) => {
   const onContinue = () => {
     console.log(form);
     setLoading(true);
+    const data = {
+      fullName: form.fullName,
+      profession: form.profession,
+      email: form.profession,
+      password: form.password,
+    };
     Fire.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then(success => {
         setLoading(false);
         setForm('reset');
+        Fire.database()
+          .ref('users/' + success.user.uid + '/')
+          .set(data);
         console.log('register success', success);
       })
       .catch(error => {
         const errorMessage = error.message;
         setLoading(false);
+        showMessage({
+          message: errorMessage,
+          type: 'default',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
         console.log('error massage', errorMessage);
       });
   };
