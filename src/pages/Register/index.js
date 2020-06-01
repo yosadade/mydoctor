@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {Header, Input, Button, Gap, Loading} from '../../components';
-import {colors, useForm} from '../../utils';
+import {colors, useForm, storeData, getData} from '../../utils';
 import {Fire} from '../../config';
 
 const Register = ({navigation}) => {
@@ -37,6 +37,8 @@ const Register = ({navigation}) => {
         Fire.database()
           .ref('users/' + success.user.uid + '/')
           .set(data);
+        storeData('user', data);
+        navigation.navigate('UploadPhoto');
         console.log('register success', success);
       })
       .catch(error => {
@@ -50,6 +52,7 @@ const Register = ({navigation}) => {
         });
         console.log('error massage', errorMessage);
       });
+    console.log(form);
   };
   return (
     <>
