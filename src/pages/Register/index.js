@@ -23,17 +23,18 @@ const Register = ({navigation}) => {
   const onContinue = () => {
     console.log(form);
     setLoading(true);
-    const data = {
-      fullName: form.fullName,
-      profession: form.profession,
-      email: form.profession,
-      password: form.password,
-    };
     Fire.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then(success => {
         setLoading(false);
         setForm('reset');
+        const data = {
+          fullName: form.fullName,
+          profession: form.profession,
+          email: form.profession,
+          password: form.password,
+          uid: success.user.uid,
+        };
         Fire.database()
           .ref('users/' + success.user.uid + '/')
           .set(data);
