@@ -3,11 +3,11 @@ import {StyleSheet, View, Image, Text} from 'react-native';
 import {IconRemovePhoto} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-const Profile = ({avatar, name, desc, isRemove}) => {
+const Profile = ({photo, name, desc, isRemove}) => {
   return (
     <View style={styles.container}>
       <View style={styles.borderProfile}>
-        <Image source={avatar} style={styles.avatar} />
+        <Image source={photo} style={styles.photo} />
         {isRemove && <IconRemovePhoto style={styles.removePhoto} />}
       </View>
       {name && (
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatar: {
+  photo: {
     width: 110,
     height: 110,
     borderRadius: 110 / 2,
