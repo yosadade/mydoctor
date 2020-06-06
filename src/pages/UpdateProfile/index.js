@@ -10,6 +10,7 @@ const UpdateProfile = ({navigation}) => {
     fullName: '',
     profession: '',
     email: '',
+    password: '',
   });
 
   const [password, setPassword] = useState('');
@@ -20,13 +21,15 @@ const UpdateProfile = ({navigation}) => {
       data.photo = {uri: res.photo};
       setProfile(data);
     });
-  });
+  }, []);
 
   const update = () => {
     console.log('profile', profile);
+    const data = profile;
+    data.photo = profile.photo.uri;
     Fire.database()
       .ref(`users/${profile.uid}/`)
-      .update(profile)
+      .update(data)
       .then(() => {
         console.log('succes');
       })
