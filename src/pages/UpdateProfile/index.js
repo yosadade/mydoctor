@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {Header, Profile, Input, Button, Gap} from '../../components';
-import {colors, getData, storeData} from '../../utils';
+import {colors, getData, storeData, showError} from '../../utils';
 import {Fire} from '../../config';
-import {showMessage} from 'react-native-flash-message';
 import ImagePicker from 'react-native-image-picker';
 import {ILNullPhoto} from '../../assets';
 
@@ -30,7 +29,7 @@ const UpdateProfile = ({navigation}) => {
   const update = () => {
     if (password.length > 0) {
       if (password.length < 6) {
-        showMessage('Password kurang dari 6 karater');
+        showError('Password kurang dari 6 karater');
       } else {
         updatePassword();
         updateProfileData();
@@ -44,7 +43,7 @@ const UpdateProfile = ({navigation}) => {
     Fire.auth().onAuthStateChanged(user => {
       if (user) {
         user.updatePassword(password).catch(err => {
-          showMessage(err.message);
+          showError(err.message);
         });
       }
     });
@@ -62,11 +61,11 @@ const UpdateProfile = ({navigation}) => {
             navigation.replace('MainApp');
           })
           .catch(() => {
-            showMessage('Terjadi Masalah');
+            showError('Terjadi Masalah');
           });
       })
       .catch(err => {
-        showMessage(err.message);
+        showError(err.message);
       });
   };
 
@@ -82,7 +81,7 @@ const UpdateProfile = ({navigation}) => {
       {quality: 0.5, maxWidth: 200, maxHeight: 200},
       response => {
         if (response.didCancel || response.error) {
-          showMessage('oops, sepertinya anda tidak memilih foto nya?');
+          showError('oops, sepertinya anda tidak memilih foto nya?');
         } else {
           const source = {uri: response.uri};
 
