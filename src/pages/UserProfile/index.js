@@ -1,14 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Header, Profile, List, Gap} from '../../components';
-import {
-  IconEditProfille,
-  IconLanguage,
-  IconRate,
-  IconHelp,
-  ILNullPhoto,
-} from '../../assets';
+import {ILNullPhoto} from '../../assets';
 import {colors, getData} from '../../utils';
+import {Fire} from '../../config';
+import {showMessage} from 'react-native-flash-message';
 
 const UserProfile = ({navigation}) => {
   const [profile, setProfile] = useState({
@@ -16,6 +12,7 @@ const UserProfile = ({navigation}) => {
     profession: '',
     photo: ILNullPhoto,
   });
+
   useEffect(() => {
     getData('user').then(res => {
       const data = res;
@@ -23,6 +20,23 @@ const UserProfile = ({navigation}) => {
       setProfile(data);
     });
   }, []);
+
+  const signOut = () => {
+    Fire.auth()
+      .signOut()
+      .then(() => {
+        console.log('succes signout');
+        navigation.replace('GetStarted');
+      })
+      .catch(err => {
+        showMessage({
+          message: err.message,
+          type: 'default',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      });
+  };
   return (
     <View style={styles.container}>
       <Header title="Profile" onPress={() => navigation.goBack()} />
@@ -36,29 +50,30 @@ const UserProfile = ({navigation}) => {
       )}
       <Gap height={14} />
       <List
-        icon={IconEditProfille}
+        icon="edit-profile"
         name="Edit Profile"
         desc="Last Update Yesterday"
         type="next"
         onPress={() => navigation.navigate('UpdateProfile')}
       />
       <List
-        icon={IconLanguage}
+        icon="language"
         name="Language"
         desc="Available 12 languages"
         type="next"
       />
       <List
-        icon={IconRate}
+        icon="rate"
         name="Give Us Rate"
         desc="On Google Play Store"
         type="next"
       />
       <List
-        icon={IconHelp}
-        name="Help Center"
+        icon="help"
+        name="Sign Out"
         desc="Read our guideines"
         type="next"
+        onPress={signOut}
       />
     </View>
   );

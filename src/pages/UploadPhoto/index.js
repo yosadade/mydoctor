@@ -16,7 +16,7 @@ const UploadPhoto = ({navigation, route}) => {
     ImagePicker.launchImageLibrary(
       {quality: 0.5, maxWidth: 200, maxHeight: 200},
       response => {
-        console.log('response', response);
+        // console.log('response', response);
         if (response.didCancel || response.error) {
           showMessage({
             message: 'oops, sepertinya anda tidak memilih foto nya ?',
@@ -27,7 +27,7 @@ const UploadPhoto = ({navigation, route}) => {
         } else {
           const sourcePhoto = {uri: response.uri};
 
-          console.log('response getImage', response);
+          // console.log('response getImage', response);
           setPhotoForDB(`data: ${response.type};base64, ${response.data}`);
           setPhoto(sourcePhoto);
           setHasPhoto(true);

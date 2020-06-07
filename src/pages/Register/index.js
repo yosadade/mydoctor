@@ -31,7 +31,7 @@ const Register = ({navigation}) => {
         const data = {
           fullName: form.fullName,
           profession: form.profession,
-          email: form.profession,
+          email: form.email,
           password: form.password,
           uid: success.user.uid,
         };
