@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {
   HomeProfile,
@@ -7,15 +7,31 @@ import {
   NewsItem,
   Gap,
 } from '../../components';
-import {fonts, colors} from '../../utils';
+import {fonts, colors, showError} from '../../utils';
 import {
   JSONDoctorCategory,
   DummyDocter1,
   DummyDocter2,
   DummyDocter3,
 } from '../../assets';
+import {Fire} from '../../config';
 
 const Doctor = ({navigation}) => {
+  const [news, setNews] = useState([]);
+  useEffect(() => {
+    Fire.database()
+      .ref('news/')
+      .once('value')
+      .then(res => {
+        console.log(res.val());
+        if (res.val()) {
+          setNews(res.val());
+        }
+      })
+      .catch(err => {
+        showError(err.message);
+      });
+  }, []);
   return (
     <View style={styles.page}>
       <View style={styles.content}>
@@ -66,9 +82,16 @@ const Doctor = ({navigation}) => {
             />
             <Text style={styles.sectionLabel}>Good News</Text>
           </View>
-          <NewsItem />
-          <NewsItem />
-          <NewsItem />
+          {news.map(item => {
+            return (
+              <NewsItem
+                key={item.id}
+                title={item.title}
+                date={item.date}
+                image={item.image}
+              />
+            );
+          })}
           <Gap height={30} />
         </ScrollView>
       </View>
