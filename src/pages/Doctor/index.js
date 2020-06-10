@@ -97,7 +97,7 @@ const Doctor = ({navigation}) => {
                     <DocterCategory
                       key={index}
                       category={item.category}
-                      onPress={() => navigation.navigate('ChooseDoctor')}
+                      onPress={() => navigation.navigate('ChooseDoctor', item)}
                     />
                   );
                 })}
@@ -112,7 +112,7 @@ const Doctor = ({navigation}) => {
                 <RatedDoctors
                   key={doctor.id}
                   avatar={{uri: doctor.data.photo}}
-                  onPress={() => navigation.navigate('DoctorProfile')}
+                  onPress={() => navigation.navigate('DoctorProfile', doctor)}
                   name={doctor.data.fullName}
                   desc={doctor.data.category}
                 />
