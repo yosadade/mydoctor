@@ -34,7 +34,7 @@ const MainApp = () => {
 const Router = () => {
   return (
     <Stack.Navigator
-      initialRouteName="GetStarted"
+      initialRouteName="MainApp"
       screenOptions={{
         headerShown: false,
         ...TransitionPresets.SlideFromRightIOS,
