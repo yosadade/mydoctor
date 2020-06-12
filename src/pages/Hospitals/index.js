@@ -12,7 +12,6 @@ const Hospitals = () => {
       .ref('hospitals/')
       .once('value')
       .then(res => {
-        console.log(res.val());
         if (res.val()) {
           setHospitals(res.val());
         }

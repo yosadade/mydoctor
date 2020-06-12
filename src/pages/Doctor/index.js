@@ -25,7 +25,6 @@ const Doctor = ({navigation}) => {
       .ref('news/')
       .once('value')
       .then(res => {
-        console.log(res.val());
         if (res.val()) {
           const data = res.val();
           const filterData = data.filter(el => el !== null);
@@ -42,12 +41,10 @@ const Doctor = ({navigation}) => {
       .ref('doctor_category/')
       .once('value')
       .then(res => {
-        console.log('category doctor:', res.val());
         if (res.val()) {
           const data = res.val();
           const filterData = data.filter(el => el !== null);
 
-          console.log('data hasil filter', filterData);
           setCategoryDoctor(filterData);
         }
       })
@@ -63,7 +60,6 @@ const Doctor = ({navigation}) => {
       .limitToLast(3)
       .once('value')
       .then(res => {
-        console.log('top rated doctor', res.val());
         if (res.val()) {
           const olData = res.val();
           const data = [];
@@ -73,7 +69,6 @@ const Doctor = ({navigation}) => {
               data: olData[key],
             });
           });
-          console.log('data hasil parse: ', data);
           setDoctors(data);
         }
       })
