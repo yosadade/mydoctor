@@ -5,9 +5,11 @@ import Router from './router';
 import {Loading} from './components';
 import {Provider, useSelector} from 'react-redux';
 import store from './redux/store';
+import {YellowBox} from 'react-native';
 
 const MainApp = () => {
   const stateGlobal = useSelector(state => state);
+  YellowBox.ignoreWarnings(['Setting a timer']);
   return (
     <>
       <NavigationContainer>

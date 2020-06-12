@@ -8,7 +8,6 @@ import {
   Gap,
 } from '../../components';
 import {fonts, colors, showError} from '../../utils';
-import {DummyDocter1, DummyDocter2, DummyDocter3} from '../../assets';
 import {Fire} from '../../config';
 
 const Doctor = ({navigation}) => {
@@ -28,7 +27,9 @@ const Doctor = ({navigation}) => {
       .then(res => {
         console.log(res.val());
         if (res.val()) {
-          setNews(res.val());
+          const data = res.val();
+          const filterData = data.filter(el => el !== null);
+          setNews(filterData);
         }
       })
       .catch(err => {
@@ -41,9 +42,13 @@ const Doctor = ({navigation}) => {
       .ref('doctor_category/')
       .once('value')
       .then(res => {
-        console.log('category doctor', res.val());
+        console.log('category doctor:', res.val());
         if (res.val()) {
-          setCategoryDoctor(res.val());
+          const data = res.val();
+          const filterData = data.filter(el => el !== null);
+
+          console.log('data hasil filter', filterData);
+          setCategoryDoctor(filterData);
         }
       })
       .catch(err => {
@@ -92,10 +97,10 @@ const Doctor = ({navigation}) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.category}>
                 <Gap width={32} />
-                {categoryDoctor.map((item, index) => {
+                {categoryDoctor.map(item => {
                   return (
                     <DocterCategory
-                      key={index}
+                      key={`category-${item.id}`}
                       category={item.category}
                       onPress={() => navigation.navigate('ChooseDoctor', item)}
                     />

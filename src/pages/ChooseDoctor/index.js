@@ -48,7 +48,7 @@ const ChooseDoctor = ({navigation, route}) => {
             name={doctor.data.fullName}
             desc={doctor.data.gender}
             type="next"
-            onPress={() => navigation.navigate('Chatting')}
+            onPress={() => navigation.navigate('DoctorProfile', doctor)}
           />
         );
       })}
