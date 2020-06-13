@@ -3,12 +3,18 @@ import {StyleSheet, View, TextInput} from 'react-native';
 import {colors, fonts} from '../../../utils';
 import {Button} from '../../atom';
 
-const InputChat = ({disable, value, onChangeText, onButtonPress}) => {
+const InputChat = ({
+  disable,
+  value,
+  onChangeText,
+  onButtonPress,
+  placeholder,
+}) => {
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Tulis pesan untuk Nairobi"
+        placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
       />

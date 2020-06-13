@@ -13,7 +13,7 @@ import {Fire} from '../../config';
 
 const Chatting = ({navigation, route}) => {
   const dataDoctor = route.params;
-  const [chatContent, setChatConent] = useState('');
+  const [chatContent, setChatContent] = useState('');
   const [user, setUser] = useState({});
   const [chatData, setChatData] = useState([]);
 
@@ -58,7 +58,7 @@ const Chatting = ({navigation, route}) => {
   };
 
   const chatSend = () => {
-    // setChatConent('');
+    // setChatContent('');
     const today = new Date();
 
     const data = {
@@ -71,12 +71,32 @@ const Chatting = ({navigation, route}) => {
     const chatID = `${user.uid}_${dataDoctor.data.uid}`;
 
     const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
+    const urlMessageUser = `message/${user.uid}/${chatID}`;
+    const urlMessageDoctor = `message/${dataDoctor.data.uid}/${chatID}`;
+    const dataHistoryChatForUser = {
+      lastContentChat: chatContent,
+      lastChatDate: today.getTime(),
+      uidPartner: user.uid,
+    };
+    const dataHistoryChatForDoctor = {
+      lastContentChat: chatContent,
+      lastChatDate: today.getTime(),
+      uidPartner: dataDoctor.data.uid,
+    };
     // kirim ke firebase
     Fire.database()
       .ref(urlFirebase)
       .push(data)
       .then(() => {
-        setChatConent('');
+        setChatContent('');
+        // set history for user
+        Fire.database()
+          .ref(urlMessageUser)
+          .set(dataHistoryChatForUser);
+        // set history for doctor
+        Fire.database()
+          .ref(urlMessageDoctor)
+          .set(dataHistoryChatForDoctor);
       })
       .catch(err => {
         showError(err.message);
@@ -116,8 +136,9 @@ const Chatting = ({navigation, route}) => {
       </View>
       <InputChat
         value={chatContent}
-        onChangeText={value => setChatConent(value)}
+        onChangeText={value => setChatContent(value)}
         onButtonPress={chatSend}
+        placeholder={`Tulis pesan untuk dokter ${dataDoctor.data.fullName}`}
       />
     </View>
   );
