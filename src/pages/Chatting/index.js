@@ -1,49 +1,79 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {Header, ChatItem, InputChat} from '../../components';
-import {fonts, colors, getData, showError} from '../../utils';
+import {
+  fonts,
+  colors,
+  getData,
+  showError,
+  getChatTime,
+  setDateChat,
+} from '../../utils';
 import {Fire} from '../../config';
 
 const Chatting = ({navigation, route}) => {
   const dataDoctor = route.params;
   const [chatContent, setChatConent] = useState('');
   const [user, setUser] = useState({});
+  const [chatData, setChatData] = useState([]);
 
   useEffect(() => {
+    getDataUserFromLocal();
+    const chatID = `${user.uid}_${dataDoctor.data.uid}`;
+    const urlFirebase = `chatting/${chatID}/allChat/`;
+
+    Fire.database()
+      .ref(urlFirebase)
+      .on('value', snapshot => {
+        if (snapshot.val()) {
+          const dataSnapshot = snapshot.val();
+          const allDataChat = [];
+
+          Object.keys(dataSnapshot).map(key => {
+            const dataChat = dataSnapshot[key];
+            const newDataChat = [];
+
+            Object.keys(dataChat).map(itemChat => {
+              newDataChat.push({
+                id: itemChat,
+                data: dataChat[itemChat],
+              });
+            });
+
+            allDataChat.push({
+              id: key,
+              data: newDataChat,
+            });
+          });
+          console.log('all data chat', allDataChat);
+          setChatData(allDataChat);
+        }
+      });
+  }, [dataDoctor.data.uid, user.uid]);
+
+  const getDataUserFromLocal = () => {
     getData('user').then(res => {
       setUser(res);
     });
-  });
+  };
 
   const chatSend = () => {
-    setChatConent('');
+    // setChatConent('');
     const today = new Date();
-    const hour = today.getHours();
-    const minutes = today.getMinutes();
-    const year = today.getFullYear();
-    const mount = today.getMonth() + 1;
-    const date = today.getDate();
 
     const data = {
       sendBy: user.uid,
-      chatDate: new Date().getTime(),
-      chatTime: `${hour}:${minutes} ${hour > 12 ? 'PM' : 'AM'}`,
+      chatDate: today.getTime(),
+      chatTime: getChatTime(today),
       chatContent: chatContent,
     };
-    console.log('data untuk dikirim :', data);
-    console.log(
-      'url firebase',
-      `chatting/${user.uid}_${
-        dataDoctor.data.uid
-      }/allChat/${year}-${mount}-${date}`,
-    );
+
+    const chatID = `${user.uid}_${dataDoctor.data.uid}`;
+
+    const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
     // kirim ke firebase
     Fire.database()
-      .ref(
-        `chatting/${user.uid}_${
-          dataDoctor.data.uid
-        }/allChat/${year}-${mount}-${date}`,
-      )
+      .ref(urlFirebase)
       .push(data)
       .then(() => {
         setChatConent('');
@@ -63,10 +93,25 @@ const Chatting = ({navigation, route}) => {
       />
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.chatDate}>Senin, 21 Maret, 2020</Text>
-          <ChatItem isMe />
-          <ChatItem />
-          <ChatItem isMe />
+          {chatData.map(chat => {
+            return (
+              <View key={chat.id}>
+                <Text style={styles.chatDate}>{chat.id}</Text>
+                {chat.data.map(itemChat => {
+                  const isMe = itemChat.data.sendBy === user.uid;
+                  return (
+                    <ChatItem
+                      key={itemChat.id}
+                      isMe={isMe}
+                      text={itemChat.data.chatContent}
+                      date={itemChat.data.chatTime}
+                      photo={isMe ? null : {uri: dataDoctor.data.photo}}
+                    />
+                  );
+                })}
+              </View>
+            );
+          })}
         </ScrollView>
       </View>
       <InputChat

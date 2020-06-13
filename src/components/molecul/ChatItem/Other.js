@@ -1,19 +1,16 @@
 import React from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import {fonts, colors} from '../../../utils';
-import {DummyDocter1} from '../../../assets';
 
-const Other = () => {
+const Other = ({text, date, photo}) => {
   return (
     <View style={styles.container}>
-      <Image source={DummyDocter1} style={styles.avatar} />
+      <Image source={photo} style={styles.avatar} />
       <View>
         <View style={styles.chatContent}>
-          <Text style={styles.text}>
-            Ibu dokter, apakah memakan jeruk tiap hari itu buruk ?
-          </Text>
+          <Text style={styles.text}>{text}</Text>
         </View>
-        <Text style={styles.date}>4.20 AM</Text>
+        <Text style={styles.date}>{date}</Text>
       </View>
     </View>
   );
@@ -27,6 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingLeft: 16,
     flexDirection: 'row',
+    maxWidth: '80%',
   },
   avatar: {
     width: 30,
@@ -35,7 +33,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   chatContent: {
-    maxWidth: '80%',
+    maxWidth: '100%',
     padding: 12,
     paddingRight: 18,
     backgroundColor: colors.primary,
