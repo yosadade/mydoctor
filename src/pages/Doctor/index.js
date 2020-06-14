@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {
   HomeProfile,
-  DocterCategory,
+  DoctorCategory,
   RatedDoctors,
   NewsItem,
   Gap,
@@ -94,7 +94,7 @@ const Doctor = ({navigation}) => {
                 <Gap width={32} />
                 {categoryDoctor.map(item => {
                   return (
-                    <DocterCategory
+                    <DoctorCategory
                       key={`category-${item.id}`}
                       category={item.category}
                       onPress={() => navigation.navigate('ChooseDoctor', item)}

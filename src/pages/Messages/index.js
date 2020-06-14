@@ -10,45 +10,53 @@ const Messages = ({navigation}) => {
 
   useEffect(() => {
     getDataUserFromLocal();
-    const urlHistory = `message/${user.uid}/`;
-    Fire.database()
-      .ref(urlHistory)
-      .on('value', snapshot => {
-        console.log('data history', snapshot.val());
-        if (snapshot.val()) {
-          const oldData = snapshot.val();
-          const data = [];
-          Object.keys(oldData).map(key => {
-            data.push({
-              id: key,
-              ...oldData[key],
-              // data: oldData[key],
-            });
+    const rootDB = Fire.database().ref();
+    const urlHistory = `messages/${user.uid}/`;
+    const messagesDB = rootDB.child(urlHistory);
+
+    messagesDB.on('value', async snapshot => {
+      if (snapshot.val()) {
+        const oldData = snapshot.val();
+        const data = [];
+
+        const promises = await Object.keys(oldData).map(async key => {
+          const urlUidDoctor = `doctors/${oldData[key].uidPartner}`;
+          const detailDoctor = await rootDB.child(urlUidDoctor).once('value');
+          data.push({
+            id: key,
+            detailDoctor: detailDoctor.val(),
+            ...oldData[key],
           });
-          console.log('new data history', data);
-          setHistoryChat(data);
-        }
-      });
-  });
+        });
+
+        await Promise.all(promises);
+
+        setHistoryChat(data);
+      }
+    });
+  }, [user.uid]);
 
   const getDataUserFromLocal = () => {
     getData('user').then(res => {
       setUser(res);
     });
   };
-
   return (
     <View style={styles.page}>
       <View style={styles.content}>
         <Text style={styles.title}>Messages</Text>
         {historyChat.map(chat => {
+          const dataDoctor = {
+            id: chat.detailDoctor.uid,
+            data: chat.detailDoctor,
+          };
           return (
             <List
               key={chat.id}
-              profile={chat.uidPartner}
-              name={chat.uidPartner}
+              photo={{uri: chat.detailDoctor.photo}}
+              name={chat.detailDoctor.fullName}
               desc={chat.lastContentChat}
-              onPress={() => navigation.navigate('Chatting')}
+              onPress={() => navigation.navigate('Chatting', dataDoctor)}
             />
           );
         })}
@@ -60,13 +68,10 @@ const Messages = ({navigation}) => {
 export default Messages;
 
 const styles = StyleSheet.create({
-  page: {
-    backgroundColor: colors.secondary,
-    flex: 1,
-  },
+  page: {backgroundColor: colors.secondary, flex: 1},
   content: {
-    flex: 1,
     backgroundColor: colors.white,
+    flex: 1,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
@@ -74,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: fonts.primary[600],
     color: colors.text.primary,
-    marginTop: 39,
-    paddingHorizontal: 20,
+    marginTop: 30,
+    marginLeft: 16,
   },
 });

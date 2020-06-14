@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Header, ChatItem, InputChat} from '../../components';
 import {
   fonts,
@@ -21,14 +21,12 @@ const Chatting = ({navigation, route}) => {
     getDataUserFromLocal();
     const chatID = `${user.uid}_${dataDoctor.data.uid}`;
     const urlFirebase = `chatting/${chatID}/allChat/`;
-
     Fire.database()
       .ref(urlFirebase)
       .on('value', snapshot => {
         if (snapshot.val()) {
           const dataSnapshot = snapshot.val();
           const allDataChat = [];
-
           Object.keys(dataSnapshot).map(key => {
             const dataChat = dataSnapshot[key];
             const newDataChat = [];
@@ -45,7 +43,6 @@ const Chatting = ({navigation, route}) => {
               data: newDataChat,
             });
           });
-          console.log('all data chat', allDataChat);
           setChatData(allDataChat);
         }
       });
@@ -58,7 +55,6 @@ const Chatting = ({navigation, route}) => {
   };
 
   const chatSend = () => {
-    // setChatContent('');
     const today = new Date();
 
     const data = {
@@ -71,19 +67,18 @@ const Chatting = ({navigation, route}) => {
     const chatID = `${user.uid}_${dataDoctor.data.uid}`;
 
     const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
-    const urlMessageUser = `message/${user.uid}/${chatID}`;
-    const urlMessageDoctor = `message/${dataDoctor.data.uid}/${chatID}`;
+    const urlMessageUser = `messages/${user.uid}/${chatID}`;
+    const urlMessageDoctor = `messages/${dataDoctor.data.uid}/${chatID}`;
     const dataHistoryChatForUser = {
-      lastContentChat: chatContent,
-      lastChatDate: today.getTime(),
-      uidPartner: user.uid,
-    };
-    const dataHistoryChatForDoctor = {
       lastContentChat: chatContent,
       lastChatDate: today.getTime(),
       uidPartner: dataDoctor.data.uid,
     };
-    // kirim ke firebase
+    const dataHistoryChatForDoctor = {
+      lastContentChat: chatContent,
+      lastChatDate: today.getTime(),
+      uidPartner: user.uid,
+    };
     Fire.database()
       .ref(urlFirebase)
       .push(data)
@@ -93,7 +88,8 @@ const Chatting = ({navigation, route}) => {
         Fire.database()
           .ref(urlMessageUser)
           .set(dataHistoryChatForUser);
-        // set history for doctor
+
+        // set history for dataDoctor
         Fire.database()
           .ref(urlMessageDoctor)
           .set(dataHistoryChatForDoctor);
@@ -112,7 +108,12 @@ const Chatting = ({navigation, route}) => {
         onPress={() => navigation.goBack()}
       />
       <View style={styles.content}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          ref={scroll => {
+            this.scroll = scroll;
+          }}
+          onContentSizeChange={() => this.scroll.scrollToEnd()}>
           {chatData.map(chat => {
             return (
               <View key={chat.id}>
@@ -138,7 +139,7 @@ const Chatting = ({navigation, route}) => {
         value={chatContent}
         onChangeText={value => setChatContent(value)}
         onButtonPress={chatSend}
-        placeholder={`Tulis pesan untuk dokter ${dataDoctor.data.fullName}`}
+        targetChat={dataDoctor}
       />
     </View>
   );
@@ -147,13 +148,8 @@ const Chatting = ({navigation, route}) => {
 export default Chatting;
 
 const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
-  content: {
-    flex: 1,
-  },
+  page: {backgroundColor: colors.white, flex: 1},
+  content: {flex: 1},
   chatDate: {
     fontSize: 11,
     fontFamily: fonts.primary.normal,

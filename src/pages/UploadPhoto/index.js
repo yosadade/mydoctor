@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import {showMessage} from 'react-native-flash-message';
 import {Header, Button, Link, Gap} from '../../components';
 import {ILNullPhoto, IconAddPhoto, IconRemovePhoto} from '../../assets';
-import {colors, fonts, storeData} from '../../utils';
+import {colors, fonts, storeData, showError} from '../../utils';
 import {Fire} from '../../config';
 
 const UploadPhoto = ({navigation, route}) => {
@@ -12,22 +11,17 @@ const UploadPhoto = ({navigation, route}) => {
   const [photoForDB, setPhotoForDB] = useState('');
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
-  const getImageFromGallery = () => {
+  const getImage = () => {
     ImagePicker.launchImageLibrary(
       {quality: 0.5, maxWidth: 200, maxHeight: 200},
       response => {
         if (response.didCancel || response.error) {
-          showMessage({
-            message: 'oops, sepertinya anda tidak memilih foto nya ?',
-            type: 'default',
-            backgroundColor: colors.error,
-            color: colors.white,
-          });
+          showError('oops, sepertinya anda tidak memilih foto nya?');
         } else {
-          const sourcePhoto = {uri: response.uri};
+          const source = {uri: response.uri};
 
-          setPhotoForDB(`data: ${response.type};base64, ${response.data}`);
-          setPhoto(sourcePhoto);
+          setPhotoForDB(`data:${response.type};base64, ${response.data}`);
+          setPhoto(source);
           setHasPhoto(true);
         }
       },
@@ -46,19 +40,12 @@ const UploadPhoto = ({navigation, route}) => {
 
     navigation.replace('MainApp');
   };
-
   return (
     <View style={styles.page}>
-      <Header
-        title="Upoad Photo"
-        onPress={() => navigation.goBack()}
-        icon="back-dark"
-      />
+      <Header title="Upload Photo" />
       <View style={styles.content}>
         <View style={styles.profile}>
-          <TouchableOpacity
-            style={styles.avatarWrapper}
-            onPress={getImageFromGallery}>
+          <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}>
             <Image source={photo} style={styles.avatar} />
             {hasPhoto && <IconRemovePhoto style={styles.addPhoto} />}
             {!hasPhoto && <IconAddPhoto style={styles.addPhoto} />}
@@ -88,21 +75,19 @@ const UploadPhoto = ({navigation, route}) => {
 export default UploadPhoto;
 
 const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
+  page: {flex: 1, backgroundColor: colors.white},
   content: {
-    flex: 1,
     paddingHorizontal: 40,
     paddingBottom: 64,
+    flex: 1,
     justifyContent: 'space-between',
   },
   profile: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
+  avatar: {width: 110, height: 110, borderRadius: 110 / 2},
   avatarWrapper: {
     width: 130,
     height: 130,
@@ -112,16 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatar: {
-    width: 110,
-    height: 110,
-    borderRadius: 110 / 2,
-  },
-  addPhoto: {
-    position: 'absolute',
-    bottom: 8,
-    right: 6,
-  },
+  addPhoto: {position: 'absolute', bottom: 8, right: 6},
   name: {
     fontSize: 24,
     color: colors.text.primary,
@@ -130,8 +106,9 @@ const styles = StyleSheet.create({
   },
   profession: {
     fontSize: 18,
-    color: colors.text.secondary,
     fontFamily: fonts.primary.normal,
     textAlign: 'center',
+    color: colors.text.secondary,
+    marginTop: 4,
   },
 });

@@ -9,7 +9,7 @@ import {
   IconHelp,
 } from '../../../assets';
 
-const List = ({avatar, name, desc, type, onPress, icon}) => {
+const List = ({photo, name, desc, type, onPress, icon}) => {
   const Icon = () => {
     if (icon === 'edit-profile') {
       return <IconEditProfille />;
@@ -27,7 +27,7 @@ const List = ({avatar, name, desc, type, onPress, icon}) => {
   };
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      {icon ? <Icon /> : <Image source={avatar} style={styles.avatar} />}
+      {icon ? <Icon /> : <Image source={photo} style={styles.avatar} />}
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.desc}>{desc}</Text>

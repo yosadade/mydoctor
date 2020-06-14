@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
-import {Header, Profile, Input, Button, Gap} from '../../components';
-import {colors, getData, storeData, showError} from '../../utils';
-import {Fire} from '../../config';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import {ILNullPhoto} from '../../assets';
+import {Button, Gap, Header, Input, Profile} from '../../components';
+import {Fire} from '../../config';
+import {colors, getData, showError, storeData} from '../../utils';
 
 const UpdateProfile = ({navigation}) => {
   const [profile, setProfile] = useState({
